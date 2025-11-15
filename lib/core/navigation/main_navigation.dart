@@ -14,9 +14,8 @@ class MainNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return AdaptiveShell(
-      title: l10n.appTitle,
+      title: l10n.complaints, // Home page now shows complaints
       destinations: [
         ShellDestination(
           icon: Icons.home_outlined,

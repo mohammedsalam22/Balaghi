@@ -10,6 +10,7 @@ import 'core/navigation/main_navigation.dart';
 import 'features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'features/auth/presentation/cubit/auth/auth_state.dart';
 import 'features/auth/presentation/pages/login_page.dart';
+import 'features/complaints/presentation/cubit/complaints/complaint_cubit.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
       providers: [
         // Global Auth Cubit
         BlocProvider(create: (context) => di.sl<AuthCubit>()),
-        // Add other global cubits here as needed
+        // Global Complaint Cubit
+        BlocProvider(create: (context) => di.sl<ComplaintCubit>()),
       ],
       child: ValueListenableBuilder<ThemeMode>(
         valueListenable: di.sl<ThemeService>(),

@@ -535,6 +535,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password is required'**
   String get passwordRequired;
+
+  /// No description provided for @complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaints'**
+  String get complaints;
+
+  /// No description provided for @noComplaintsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No complaints yet'**
+  String get noComplaintsYet;
+
+  /// No description provided for @createFirstComplaint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first complaint'**
+  String get createFirstComplaint;
+
+  /// No description provided for @errorLoadingComplaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading complaints'**
+  String get errorLoadingComplaints;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @noComplaintsToDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'No complaints to display'**
+  String get noComplaintsToDisplay;
+
+  /// No description provided for @newComplaint.
+  ///
+  /// In en, this message translates to:
+  /// **'New Complaint'**
+  String get newComplaint;
+
+  /// No description provided for @complaintCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint #{number} created successfully'**
+  String complaintCreatedSuccessfully(int number);
+
+  /// No description provided for @createNewComplaint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Complaint'**
+  String get createNewComplaint;
+
+  /// No description provided for @complaintType.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint Type'**
+  String get complaintType;
+
+  /// No description provided for @complaintTypeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a complaint type'**
+  String get complaintTypeRequired;
+
+  /// No description provided for @assignedDepartment.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned Department/Part'**
+  String get assignedDepartment;
+
+  /// No description provided for @assignedDepartmentExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Public Works Department'**
+  String get assignedDepartmentExample;
+
+  /// No description provided for @assignedDepartmentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the assigned department'**
+  String get assignedDepartmentRequired;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @locationExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Main Street, Building 123'**
+  String get locationExample;
+
+  /// No description provided for @locationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the location'**
+  String get locationRequired;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @descriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your complaint in detail'**
+  String get descriptionHint;
+
+  /// No description provided for @descriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a description'**
+  String get descriptionRequired;
+
+  /// No description provided for @descriptionMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at least 10 characters'**
+  String get descriptionMinLength;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @complaintNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint #{number}'**
+  String complaintNumber(int number);
+
+  /// No description provided for @statusNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get statusNew;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// No description provided for @statusDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get statusDone;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get statusRejected;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @assignedPart.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned Part'**
+  String get assignedPart;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created At'**
+  String get createdAt;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @complaintTypeInfrastructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Infrastructure'**
+  String get complaintTypeInfrastructure;
+
+  /// No description provided for @complaintTypeHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get complaintTypeHealth;
+
+  /// No description provided for @complaintTypeEducation.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get complaintTypeEducation;
+
+  /// No description provided for @complaintTypeTransportation.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation'**
+  String get complaintTypeTransportation;
+
+  /// No description provided for @complaintTypeEnvironment.
+  ///
+  /// In en, this message translates to:
+  /// **'Environment'**
+  String get complaintTypeEnvironment;
+
+  /// No description provided for @complaintTypeSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get complaintTypeSecurity;
+
+  /// No description provided for @complaintTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get complaintTypeOther;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @noFilteredComplaints.
+  ///
+  /// In en, this message translates to:
+  /// **'No {status} complaints'**
+  String noFilteredComplaints(String status);
+
+  /// No description provided for @tryDifferentFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Try selecting a different filter'**
+  String get tryDifferentFilter;
 }
 
 class _AppLocalizationsDelegate

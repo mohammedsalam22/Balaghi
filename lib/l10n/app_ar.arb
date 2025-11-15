@@ -96,6 +96,70 @@
   "rememberMe": "تذكرني",
   "emailRequired": "البريد الإلكتروني مطلوب",
   "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
-  "passwordRequired": "كلمة المرور مطلوبة"
+  "passwordRequired": "كلمة المرور مطلوبة",
+  
+  "complaints": "الشكاوى",
+  "noComplaintsYet": "لا توجد شكاوى بعد",
+  "createFirstComplaint": "أنشئ شكواك الأولى",
+  "errorLoadingComplaints": "خطأ في تحميل الشكاوى",
+  "retry": "إعادة المحاولة",
+  "noComplaintsToDisplay": "لا توجد شكاوى للعرض",
+  "newComplaint": "شكوى جديدة",
+  "complaintCreatedSuccessfully": "تم إنشاء الشكوى رقم {number} بنجاح",
+  "@complaintCreatedSuccessfully": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "createNewComplaint": "إنشاء شكوى جديدة",
+  "complaintType": "نوع الشكوى",
+  "complaintTypeRequired": "يرجى اختيار نوع الشكوى",
+  "assignedDepartment": "القسم المكلف/الجزء",
+  "assignedDepartmentExample": "مثال: دائرة الأشغال العامة",
+  "assignedDepartmentRequired": "يرجى إدخال القسم المكلف",
+  "location": "الموقع",
+  "locationExample": "مثال: الشارع الرئيسي، المبنى 123",
+  "locationRequired": "يرجى إدخال الموقع",
+  "description": "الوصف",
+  "descriptionHint": "اوصف شكواك بالتفصيل",
+  "descriptionRequired": "يرجى إدخال الوصف",
+  "descriptionMinLength": "يجب أن يكون الوصف 10 أحرف على الأقل",
+  "submit": "إرسال",
+  "complaintNumber": "الشكوى رقم {number}",
+  "@complaintNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "statusNew": "جديدة",
+  "statusInProgress": "قيد المعالجة",
+  "statusDone": "مكتملة",
+  "statusRejected": "مرفوضة",
+  "type": "النوع",
+  "assignedPart": "القسم المكلف",
+  "status": "الحالة",
+  "createdAt": "تاريخ الإنشاء",
+  "close": "إغلاق",
+  "complaintTypeInfrastructure": "البنية التحتية",
+  "complaintTypeHealth": "الصحة",
+  "complaintTypeEducation": "التعليم",
+  "complaintTypeTransportation": "النقل",
+  "complaintTypeEnvironment": "البيئة",
+  "complaintTypeSecurity": "الأمن",
+  "complaintTypeOther": "أخرى",
+  "all": "الكل",
+  "noFilteredComplaints": "لا توجد شكاوى {status}",
+  "@noFilteredComplaints": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "tryDifferentFilter": "جرب اختيار فلتر مختلف"
 }
 

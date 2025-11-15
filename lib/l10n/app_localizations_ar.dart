@@ -231,4 +231,133 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get complaints => 'الشكاوى';
+
+  @override
+  String get noComplaintsYet => 'لا توجد شكاوى بعد';
+
+  @override
+  String get createFirstComplaint => 'أنشئ شكواك الأولى';
+
+  @override
+  String get errorLoadingComplaints => 'خطأ في تحميل الشكاوى';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get noComplaintsToDisplay => 'لا توجد شكاوى للعرض';
+
+  @override
+  String get newComplaint => 'شكوى جديدة';
+
+  @override
+  String complaintCreatedSuccessfully(int number) {
+    return 'تم إنشاء الشكوى رقم $number بنجاح';
+  }
+
+  @override
+  String get createNewComplaint => 'إنشاء شكوى جديدة';
+
+  @override
+  String get complaintType => 'نوع الشكوى';
+
+  @override
+  String get complaintTypeRequired => 'يرجى اختيار نوع الشكوى';
+
+  @override
+  String get assignedDepartment => 'القسم المكلف/الجزء';
+
+  @override
+  String get assignedDepartmentExample => 'مثال: دائرة الأشغال العامة';
+
+  @override
+  String get assignedDepartmentRequired => 'يرجى إدخال القسم المكلف';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get locationExample => 'مثال: الشارع الرئيسي، المبنى 123';
+
+  @override
+  String get locationRequired => 'يرجى إدخال الموقع';
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get descriptionHint => 'اوصف شكواك بالتفصيل';
+
+  @override
+  String get descriptionRequired => 'يرجى إدخال الوصف';
+
+  @override
+  String get descriptionMinLength => 'يجب أن يكون الوصف 10 أحرف على الأقل';
+
+  @override
+  String get submit => 'إرسال';
+
+  @override
+  String complaintNumber(int number) {
+    return 'الشكوى رقم $number';
+  }
+
+  @override
+  String get statusNew => 'جديدة';
+
+  @override
+  String get statusInProgress => 'قيد المعالجة';
+
+  @override
+  String get statusDone => 'مكتملة';
+
+  @override
+  String get statusRejected => 'مرفوضة';
+
+  @override
+  String get type => 'النوع';
+
+  @override
+  String get assignedPart => 'القسم المكلف';
+
+  @override
+  String get createdAt => 'تاريخ الإنشاء';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get complaintTypeInfrastructure => 'البنية التحتية';
+
+  @override
+  String get complaintTypeHealth => 'الصحة';
+
+  @override
+  String get complaintTypeEducation => 'التعليم';
+
+  @override
+  String get complaintTypeTransportation => 'النقل';
+
+  @override
+  String get complaintTypeEnvironment => 'البيئة';
+
+  @override
+  String get complaintTypeSecurity => 'الأمن';
+
+  @override
+  String get complaintTypeOther => 'أخرى';
+
+  @override
+  String get all => 'الكل';
+
+  @override
+  String noFilteredComplaints(String status) {
+    return 'لا توجد شكاوى $status';
+  }
+
+  @override
+  String get tryDifferentFilter => 'جرب اختيار فلتر مختلف';
 }

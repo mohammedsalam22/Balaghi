@@ -231,4 +231,135 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordRequired => 'Password is required';
+
+  @override
+  String get complaints => 'Complaints';
+
+  @override
+  String get noComplaintsYet => 'No complaints yet';
+
+  @override
+  String get createFirstComplaint => 'Create your first complaint';
+
+  @override
+  String get errorLoadingComplaints => 'Error loading complaints';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get noComplaintsToDisplay => 'No complaints to display';
+
+  @override
+  String get newComplaint => 'New Complaint';
+
+  @override
+  String complaintCreatedSuccessfully(int number) {
+    return 'Complaint #$number created successfully';
+  }
+
+  @override
+  String get createNewComplaint => 'Create New Complaint';
+
+  @override
+  String get complaintType => 'Complaint Type';
+
+  @override
+  String get complaintTypeRequired => 'Please select a complaint type';
+
+  @override
+  String get assignedDepartment => 'Assigned Department/Part';
+
+  @override
+  String get assignedDepartmentExample => 'e.g., Public Works Department';
+
+  @override
+  String get assignedDepartmentRequired =>
+      'Please enter the assigned department';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get locationExample => 'e.g., Main Street, Building 123';
+
+  @override
+  String get locationRequired => 'Please enter the location';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get descriptionHint => 'Describe your complaint in detail';
+
+  @override
+  String get descriptionRequired => 'Please enter a description';
+
+  @override
+  String get descriptionMinLength =>
+      'Description must be at least 10 characters';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String complaintNumber(int number) {
+    return 'Complaint #$number';
+  }
+
+  @override
+  String get statusNew => 'New';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get statusDone => 'Done';
+
+  @override
+  String get statusRejected => 'Rejected';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get assignedPart => 'Assigned Part';
+
+  @override
+  String get createdAt => 'Created At';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get complaintTypeInfrastructure => 'Infrastructure';
+
+  @override
+  String get complaintTypeHealth => 'Health';
+
+  @override
+  String get complaintTypeEducation => 'Education';
+
+  @override
+  String get complaintTypeTransportation => 'Transportation';
+
+  @override
+  String get complaintTypeEnvironment => 'Environment';
+
+  @override
+  String get complaintTypeSecurity => 'Security';
+
+  @override
+  String get complaintTypeOther => 'Other';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String noFilteredComplaints(String status) {
+    return 'No $status complaints';
+  }
+
+  @override
+  String get tryDifferentFilter => 'Try selecting a different filter';
 }

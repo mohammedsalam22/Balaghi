@@ -162,6 +162,49 @@ class AppTheme {
         color: lightTextDisabled.withOpacity(0.3),
         thickness: 0.5,
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: lightSurfaceColor,
+        indicatorColor: lightSecondaryColor.withOpacity(0.2),
+        labelTextStyle: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return TextStyle(
+              color: lightSecondaryColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            );
+          }
+          return TextStyle(
+            color: lightTextSecondary,
+            fontSize: 12,
+          );
+        }),
+        iconTheme: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return IconThemeData(
+              color: lightSecondaryColor,
+              size: 24,
+            );
+          }
+          return IconThemeData(
+            color: lightTextSecondary,
+            size: 24,
+          );
+        }),
+        height: 70,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: lightSurfaceColor,
+        selectedIconTheme: IconThemeData(
+          color: lightSecondaryColor,
+          size: 28,
+        ),
+        selectedLabelTextStyle: TextStyle(
+          color: lightSecondaryColor,
+          fontWeight: FontWeight.w600,
+        ),
+        indicatorColor: lightSecondaryColor.withOpacity(0.2),
+      ),
     );
   }
 
@@ -269,6 +312,49 @@ class AppTheme {
       dividerTheme: DividerThemeData(
         color: darkTextDisabled.withOpacity(0.3),
         thickness: 0.5,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: darkSurfaceColor,
+        indicatorColor: darkSecondaryColor.withOpacity(0.2),
+        labelTextStyle: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return TextStyle(
+              color: darkSecondaryColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            );
+          }
+          return TextStyle(
+            color: darkTextSecondary,
+            fontSize: 12,
+          );
+        }),
+        iconTheme: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return IconThemeData(
+              color: darkSecondaryColor,
+              size: 24,
+            );
+          }
+          return IconThemeData(
+            color: darkTextSecondary,
+            size: 24,
+          );
+        }),
+        height: 70,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: darkSurfaceColor,
+        selectedIconTheme: IconThemeData(
+          color: darkSecondaryColor,
+          size: 28,
+        ),
+        selectedLabelTextStyle: TextStyle(
+          color: darkSecondaryColor,
+          fontWeight: FontWeight.w600,
+        ),
+        indicatorColor: darkSecondaryColor.withOpacity(0.2),
       ),
     );
   }

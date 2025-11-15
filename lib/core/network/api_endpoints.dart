@@ -20,6 +20,10 @@ class ApiEndpoints {
   static const String forgotPassword = '/api/auth/forgot-password';
   static const String resetPassword = '/api/auth/reset-password';
 
+  // Complaints endpoints
+  static const String complaints = '/api/complaints';
+  static String complaintStatus(String complaintId) => '/api/complaints/$complaintId/status';
+
 
 
   // Helper method to replace path parameters

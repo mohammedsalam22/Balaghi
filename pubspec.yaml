@@ -58,7 +58,10 @@ dependencies:
   equatable: ^2.0.5
 
   # Shared Preferences
-  shared_preferences: ^2.2.2 
+  shared_preferences: ^2.2.2
+
+  # Date Formatting
+  intl: ^0.20.2 
 
 dev_dependencies:
   flutter_test:

@@ -96,6 +96,70 @@
   "rememberMe": "Remember me",
   "emailRequired": "Email is required",
   "emailInvalid": "Please enter a valid email address",
-  "passwordRequired": "Password is required"
+  "passwordRequired": "Password is required",
+  
+  "complaints": "Complaints",
+  "noComplaintsYet": "No complaints yet",
+  "createFirstComplaint": "Create your first complaint",
+  "errorLoadingComplaints": "Error loading complaints",
+  "retry": "Retry",
+  "noComplaintsToDisplay": "No complaints to display",
+  "newComplaint": "New Complaint",
+  "complaintCreatedSuccessfully": "Complaint #{number} created successfully",
+  "@complaintCreatedSuccessfully": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "createNewComplaint": "Create New Complaint",
+  "complaintType": "Complaint Type",
+  "complaintTypeRequired": "Please select a complaint type",
+  "assignedDepartment": "Assigned Department/Part",
+  "assignedDepartmentExample": "e.g., Public Works Department",
+  "assignedDepartmentRequired": "Please enter the assigned department",
+  "location": "Location",
+  "locationExample": "e.g., Main Street, Building 123",
+  "locationRequired": "Please enter the location",
+  "description": "Description",
+  "descriptionHint": "Describe your complaint in detail",
+  "descriptionRequired": "Please enter a description",
+  "descriptionMinLength": "Description must be at least 10 characters",
+  "submit": "Submit",
+  "complaintNumber": "Complaint #{number}",
+  "@complaintNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "statusNew": "New",
+  "statusInProgress": "In Progress",
+  "statusDone": "Done",
+  "statusRejected": "Rejected",
+  "type": "Type",
+  "assignedPart": "Assigned Part",
+  "status": "Status",
+  "createdAt": "Created At",
+  "close": "Close",
+  "complaintTypeInfrastructure": "Infrastructure",
+  "complaintTypeHealth": "Health",
+  "complaintTypeEducation": "Education",
+  "complaintTypeTransportation": "Transportation",
+  "complaintTypeEnvironment": "Environment",
+  "complaintTypeSecurity": "Security",
+  "complaintTypeOther": "Other",
+  "all": "All",
+  "noFilteredComplaints": "No {status} complaints",
+  "@noFilteredComplaints": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "tryDifferentFilter": "Try selecting a different filter"
 }
 
