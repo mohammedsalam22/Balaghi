@@ -1,0 +1,101 @@
+{
+  "@@locale": "en",
+  "appTitle": "Balaghi App",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "home": "Home",
+  "reports": "Reports",
+  "status": "Status",
+  "settings": "Settings",
+  
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "forgotPassword": "Forgot Password?",
+  "resetPassword": "Reset Password",
+  "verifyOtp": "Verify OTP",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "fullName": "Full Name",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "welcomeBack": "Welcome Back",
+  "signInToContinue": "Sign in to continue",
+  "createAccount": "Create Account",
+  "signUpToGetStarted": "Sign up to get started",
+  "alreadyHaveAccount": "Already have an account?",
+  "dontHaveAccount": "Don't have an account?",
+  
+  "theme": "Theme",
+  "language": "Language",
+  "arabic": "Arabic",
+  "english": "English",
+  "light": "Light",
+  "dark": "Dark",
+  "auto": "Auto",
+  "selectTheme": "Select Theme",
+  "selectLanguage": "Select Language",
+  
+  "notifications": "Notifications",
+  "manageNotifications": "Manage notifications",
+  "security": "Security",
+  "securityAndPrivacy": "Security and privacy settings",
+  "help": "Help",
+  "faqAndSupport": "Frequently asked questions and support",
+  
+  "logoutConfirmation": "Logout Confirmation",
+  "logoutMessage": "Are you sure you want to logout?",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  
+  "profile": "Profile",
+  "user": "User",
+  "editProfile": "Edit Profile",
+  
+  "verifyYourEmail": "Verify Your Email",
+  "enter6DigitCode": "Enter the 6-digit code sent to\n{email}",
+  "@enter6DigitCode": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verify": "Verify",
+  "sendResetLink": "Send Reset Link",
+  "enterEmailToReset": "Enter your email address and we'll send you a link to reset your password.",
+  "welcome": "Welcome",
+  "toBalaghiApp": "to Balaghi App",
+  "quickServices": "Quick Services",
+  "newReport": "New Report",
+  "trackReports": "Track Reports",
+  "downloadReports": "Download Reports",
+  "myReports": "My Reports",
+  "viewAllSentReports": "View all sent reports",
+  "history": "History",
+  "viewPreviousReports": "View previous reports",
+  "downloadReportsPdf": "Download reports as PDF",
+  "reportStatus": "Report Status",
+  "inProgress": "In Progress",
+  "underReview": "Under Review",
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "minimumCharacters": "Minimum {count} characters",
+  "@minimumCharacters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "newPassword": "New Password",
+  "enterNewPassword": "Enter your new password",
+  "rememberMe": "Remember me",
+  "emailRequired": "Email is required",
+  "emailInvalid": "Please enter a valid email address",
+  "passwordRequired": "Password is required"
+}
+

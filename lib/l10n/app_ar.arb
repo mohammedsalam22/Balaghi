@@ -1,0 +1,101 @@
+{
+  "@@locale": "ar",
+  "appTitle": "تطبيق البلاغي",
+  "@appTitle": {
+    "description": "عنوان التطبيق"
+  },
+  
+  "home": "الرئيسية",
+  "reports": "التقارير",
+  "status": "الحالة",
+  "settings": "الإعدادات",
+  
+  "login": "تسجيل الدخول",
+  "register": "التسجيل",
+  "logout": "تسجيل الخروج",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "resetPassword": "إعادة تعيين كلمة المرور",
+  "verifyOtp": "التحقق من رمز التحقق",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "fullName": "الاسم الكامل",
+  "signIn": "تسجيل الدخول",
+  "signUp": "التسجيل",
+  "welcomeBack": "مرحباً بك",
+  "signInToContinue": "سجل الدخول للمتابعة",
+  "createAccount": "إنشاء حساب",
+  "signUpToGetStarted": "سجل للبدء",
+  "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+  "dontHaveAccount": "ليس لديك حساب؟",
+  
+  "theme": "المظهر",
+  "language": "اللغة",
+  "arabic": "العربية",
+  "english": "الإنجليزية",
+  "light": "فاتح",
+  "dark": "داكن",
+  "auto": "تلقائي",
+  "selectTheme": "اختر المظهر",
+  "selectLanguage": "اختر اللغة",
+  
+  "notifications": "الإشعارات",
+  "manageNotifications": "إدارة الإشعارات",
+  "security": "الأمان",
+  "securityAndPrivacy": "إعدادات الأمان والخصوصية",
+  "help": "المساعدة",
+  "faqAndSupport": "الأسئلة الشائعة والدعم",
+  
+  "logoutConfirmation": "تأكيد تسجيل الخروج",
+  "logoutMessage": "هل أنت متأكد من تسجيل الخروج؟",
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
+  
+  "profile": "الملف الشخصي",
+  "user": "المستخدم",
+  "editProfile": "تعديل الملف الشخصي",
+  
+  "verifyYourEmail": "التحقق من بريدك الإلكتروني",
+  "enter6DigitCode": "أدخل الرمز المكون من 6 أرقام المرسل إلى\n{email}",
+  "@enter6DigitCode": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verify": "التحقق",
+  "sendResetLink": "إرسال رابط إعادة التعيين",
+  "enterEmailToReset": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور.",
+  "welcome": "مرحباً بك",
+  "toBalaghiApp": "في تطبيق البلاغي",
+  "quickServices": "الخدمات السريعة",
+  "newReport": "إبلاغ جديد",
+  "trackReports": "متابعة البلاغات",
+  "downloadReports": "تحميل التقارير",
+  "myReports": "تقاريري",
+  "viewAllSentReports": "عرض جميع التقارير المرسلة",
+  "history": "السجل",
+  "viewPreviousReports": "عرض سجل التقارير السابقة",
+  "downloadReportsPdf": "تحميل التقارير بصيغة PDF",
+  "reportStatus": "حالة البلاغات",
+  "inProgress": "قيد المعالجة",
+  "underReview": "قيد المراجعة",
+  "completed": "مكتملة",
+  "cancelled": "ملغاة",
+  "minimumCharacters": "الحد الأدنى {count} أحرف",
+  "@minimumCharacters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "newPassword": "كلمة المرور الجديدة",
+  "enterNewPassword": "أدخل كلمة المرور الجديدة",
+  "rememberMe": "تذكرني",
+  "emailRequired": "البريد الإلكتروني مطلوب",
+  "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+  "passwordRequired": "كلمة المرور مطلوبة"
+}
+
