@@ -90,6 +90,7 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
 
           if (state is ComplaintLoaded) {
             final allComplaints = state.complaints;
+            final isFromCache = state.isFromCache;
             final filteredComplaints = _selectedStatusFilter == null
                 ? allComplaints
                 : allComplaints
@@ -98,6 +99,35 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
 
             return Column(
               children: [
+                // Cache indicator banner
+                if (isFromCache)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    color: Colors.orange.withValues(alpha: 0.1),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.cloud_off,
+                          size: 16,
+                          color: Colors.orange[700],
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            l10n.showingCachedData,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.orange[700],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 // Status filter chips
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -203,7 +233,9 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
                         )
                       : RefreshIndicator(
                           onRefresh: () async {
-                            context.read<ComplaintCubit>().loadComplaints();
+                            context.read<ComplaintCubit>().loadComplaints(
+                              forceRefresh: true,
+                            );
                           },
                           child: ListView.builder(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

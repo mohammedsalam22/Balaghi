@@ -160,6 +160,7 @@
       }
     }
   },
-  "tryDifferentFilter": "Try selecting a different filter"
+  "tryDifferentFilter": "Try selecting a different filter",
+  "showingCachedData": "Showing cached data. Pull to refresh."
 }
 

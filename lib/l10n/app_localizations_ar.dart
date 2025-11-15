@@ -360,4 +360,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tryDifferentFilter => 'جرب اختيار فلتر مختلف';
+
+  @override
+  String get showingCachedData => 'عرض البيانات المخزنة مؤقتاً. اسحب للتحديث.';
 }

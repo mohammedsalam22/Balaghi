@@ -8,6 +8,7 @@ import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/presentation/cubit/auth/auth_cubit.dart';
+import '../../features/complaints/data/datasources/complaint_local_datasource.dart';
 import '../../features/complaints/data/datasources/complaint_remote_datasource.dart';
 import '../../features/complaints/data/repositories/complaint_repository_impl.dart';
 import '../../features/complaints/domain/repositories/complaint_repository.dart';
@@ -79,10 +80,16 @@ Future<void> init() async {
   sl.registerLazySingleton<ComplaintRemoteDataSource>(
     () => ComplaintRemoteDataSourceImpl(dioClient: sl()),
   );
+  sl.registerLazySingleton<ComplaintLocalDataSource>(
+    () => ComplaintLocalDataSourceImpl(sharedPreferences: sl()),
+  );
 
   // Complaints - Repositories
   sl.registerLazySingleton<ComplaintRepository>(
-    () => ComplaintRepositoryImpl(remoteDataSource: sl()),
+    () => ComplaintRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+    ),
   );
 
   // Complaints - Cubits (Factory to create new instance each time)

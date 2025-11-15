@@ -362,4 +362,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryDifferentFilter => 'Try selecting a different filter';
+
+  @override
+  String get showingCachedData => 'Showing cached data. Pull to refresh.';
 }

@@ -781,6 +781,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try selecting a different filter'**
   String get tryDifferentFilter;
+
+  /// No description provided for @showingCachedData.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing cached data. Pull to refresh.'**
+  String get showingCachedData;
 }
 
 class _AppLocalizationsDelegate

@@ -9,6 +9,9 @@ abstract class ComplaintRepository {
 
   Future<Either<Failure, List<ComplaintEntity>>> getComplaints();
 
+  /// Get cached complaints (for immediate display while fetching fresh data)
+  Future<Either<Failure, List<ComplaintEntity>>> getCachedComplaints();
+
   /// Update complaint status (admin only)
   Future<Either<Failure, void>> updateComplaintStatus(
     String complaintId,

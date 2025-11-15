@@ -15,11 +15,12 @@ class ComplaintLoading extends ComplaintState {}
 
 class ComplaintLoaded extends ComplaintState {
   final List<ComplaintEntity> complaints;
+  final bool isFromCache;
 
-  const ComplaintLoaded(this.complaints);
+  const ComplaintLoaded(this.complaints, {this.isFromCache = false});
 
   @override
-  List<Object?> get props => [complaints];
+  List<Object?> get props => [complaints, isFromCache];
 }
 
 class ComplaintCreated extends ComplaintState {

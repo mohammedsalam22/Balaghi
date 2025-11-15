@@ -160,6 +160,7 @@
       }
     }
   },
-  "tryDifferentFilter": "جرب اختيار فلتر مختلف"
+  "tryDifferentFilter": "جرب اختيار فلتر مختلف",
+  "showingCachedData": "عرض البيانات المخزنة مؤقتاً. اسحب للتحديث."
 }
 

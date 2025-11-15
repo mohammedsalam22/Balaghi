@@ -7,13 +7,38 @@ class ComplaintCubit extends Cubit<ComplaintState> {
 
   ComplaintCubit({required this.repository}) : super(ComplaintInitial());
 
-  /// Load all complaints
-  Future<void> loadComplaints() async {
+  /// Load all complaints (cache-first strategy)
+  Future<void> loadComplaints({bool forceRefresh = false}) async {
+    // First, try to load cached data for immediate display
+    if (!forceRefresh) {
+      final cachedResult = await repository.getCachedComplaints();
+      cachedResult.fold(
+        (_) {
+          // Cache failed, continue to loading state
+        },
+        (cachedComplaints) {
+          if (cachedComplaints.isNotEmpty) {
+            // Emit cached data immediately
+            emit(ComplaintLoaded(cachedComplaints, isFromCache: true));
+          }
+        },
+      );
+    }
+
+    // Then fetch fresh data from server
     emit(ComplaintLoading());
     final result = await repository.getComplaints();
     result.fold(
-      (failure) => emit(ComplaintError(failure.message)),
-      (complaints) => emit(ComplaintLoaded(complaints)),
+      (failure) {
+        // If we have cached data, show it with error message
+        // Otherwise show error state
+        if (state is ComplaintLoaded && (state as ComplaintLoaded).isFromCache) {
+          // Keep showing cached data, error is handled by network failure
+          return;
+        }
+        emit(ComplaintError(failure.message));
+      },
+      (complaints) => emit(ComplaintLoaded(complaints, isFromCache: false)),
     );
   }
 
