@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/storage/secure_storage_service.dart';
-import '../../../../core/utils/jwt_decoder.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../cubit/complaints/complaint_cubit.dart';
 import '../cubit/complaints/complaint_state.dart';
 import '../widgets/complaint_card.dart';
 import '../widgets/create_complaint_dialog.dart';
+import '../widgets/filter_chip_widget.dart';
+import '../widgets/complaints_loading_widget.dart';
+import '../widgets/complaints_error_widget.dart';
+import '../widgets/complaints_empty_state_widget.dart';
+import '../utils/complaint_utils.dart';
 
 class ComplaintsPage extends StatefulWidget {
   const ComplaintsPage({super.key});
@@ -15,41 +18,77 @@ class ComplaintsPage extends StatefulWidget {
   State<ComplaintsPage> createState() => _ComplaintsPageState();
 }
 
-class _ComplaintsPageState extends State<ComplaintsPage> {
-  bool _isAdmin = false;
+class _ComplaintsPageState extends State<ComplaintsPage>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   int? _selectedStatusFilter; // null means "All"
+  late AnimationController _fabAnimationController;
+  late AnimationController _filterAnimationController;
+  late Animation<double> _fabScaleAnimation;
+  late Animation<Offset> _filterSlideAnimation;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    _checkAdminStatus();
-    context.read<ComplaintCubit>().loadComplaints();
-  }
+    
+    // Initialize animations
+    _fabAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _filterAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
 
-  Future<void> _checkAdminStatus() async {
-    final storageService = SecureStorageService();
-    final token = await storageService.getAccessToken();
-    final isAdmin = JwtDecoder.isAdmin(token);
-    setState(() {
-      _isAdmin = isAdmin;
+    _fabScaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fabAnimationController,
+      curve: Curves.elasticOut,
+    ));
+
+    _filterSlideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _filterAnimationController,
+      curve: Curves.easeOutBack,
+    ));
+
+    // Load data
+    context.read<ComplaintCubit>().loadComplaints();
+    
+    // Start animations after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fabAnimationController.forward();
+      Future.delayed(const Duration(milliseconds: 200), () {
+        if (mounted) _filterAnimationController.forward();
+      });
     });
   }
 
-  Future<void> _showCreateComplaintDialog() async {
-    final result = await showDialog<bool>(
+  @override
+  void dispose() {
+    _fabAnimationController.dispose();
+    _filterAnimationController.dispose();
+    context.read<ComplaintCubit>().clearCache();
+    super.dispose();
+  }
+
+  void _showCreateComplaintDialog() async {
+    await showDialog(
       context: context,
       builder: (context) => const CreateComplaintDialog(),
     );
-    if (result == true) {
-      // Refresh complaints list
-      if (mounted) {
-        context.read<ComplaintCubit>().loadComplaints();
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: BlocConsumer<ComplaintCubit, ComplaintState>(
         listener: (context, state) {
@@ -85,12 +124,14 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
           final l10n = AppLocalizations.of(context)!;
 
           if (state is ComplaintLoading && state is! ComplaintLoaded) {
-            return const Center(child: CircularProgressIndicator());
+            return const ComplaintsLoadingWidget();
           }
 
           if (state is ComplaintLoaded) {
             final allComplaints = state.complaints;
             final isFromCache = state.isFromCache;
+            final statusCounts = state.statusCounts;
+            
             final filteredComplaints = _selectedStatusFilter == null
                 ? allComplaints
                 : allComplaints
@@ -129,107 +170,99 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
                     ),
                   ),
                 // Status filter chips
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _buildFilterChip(
-                          context,
-                          l10n,
-                          null,
-                          l10n.all,
-                          Icons.filter_list,
-                          allComplaints.length,
-                        ),
-                        const SizedBox(width: 8),
-                        _buildFilterChip(
-                          context,
-                          l10n,
-                          0,
-                          l10n.statusNew,
-                          Icons.new_releases,
-                          allComplaints.where((c) => c.status == 0).length,
-                          Colors.blue,
-                        ),
-                        const SizedBox(width: 8),
-                        _buildFilterChip(
-                          context,
-                          l10n,
-                          1,
-                          l10n.statusInProgress,
-                          Icons.hourglass_empty,
-                          allComplaints.where((c) => c.status == 1).length,
-                          Colors.orange,
-                        ),
-                        const SizedBox(width: 8),
-                        _buildFilterChip(
-                          context,
-                          l10n,
-                          2,
-                          l10n.statusDone,
-                          Icons.check_circle,
-                          allComplaints.where((c) => c.status == 2).length,
-                          Colors.green,
-                        ),
-                        const SizedBox(width: 8),
-                        _buildFilterChip(
-                          context,
-                          l10n,
-                          3,
-                          l10n.statusRejected,
-                          Icons.cancel,
-                          allComplaints.where((c) => c.status == 3).length,
-                          Colors.red,
-                        ),
-                      ],
+                SlideTransition(
+                  position: _filterSlideAnimation,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          FilterChipWidget(
+                            status: null,
+                            label: l10n.all,
+                            icon: Icons.filter_list,
+                            count: allComplaints.length,
+                            isSelected: _selectedStatusFilter == null,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedStatusFilter = selected ? null : null;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          FilterChipWidget(
+                            status: 0,
+                            label: l10n.statusNew,
+                            icon: Icons.new_releases,
+                            count: statusCounts[0] ?? 0,
+                            color: Colors.blue,
+                            isSelected: _selectedStatusFilter == 0,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedStatusFilter = selected ? 0 : null;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          FilterChipWidget(
+                            status: 1,
+                            label: l10n.statusInProgress,
+                            icon: Icons.hourglass_empty,
+                            count: statusCounts[1] ?? 0,
+                            color: Colors.orange,
+                            isSelected: _selectedStatusFilter == 1,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedStatusFilter = selected ? 1 : null;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          FilterChipWidget(
+                            status: 2,
+                            label: l10n.statusDone,
+                            icon: Icons.check_circle,
+                            count: statusCounts[2] ?? 0,
+                            color: Colors.green,
+                            isSelected: _selectedStatusFilter == 2,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedStatusFilter = selected ? 2 : null;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          FilterChipWidget(
+                            status: 3,
+                            label: l10n.statusRejected,
+                            icon: Icons.cancel,
+                            count: statusCounts[3] ?? 0,
+                            color: Colors.red,
+                            isSelected: _selectedStatusFilter == 3,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedStatusFilter = selected ? 3 : null;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 // Complaints list
                 Expanded(
                   child: filteredComplaints.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.filter_alt_off,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                _selectedStatusFilter == null
-                                    ? l10n.noComplaintsYet
-                                    : l10n.noFilteredComplaints(
-                                        _getStatusText(
-                                          l10n,
-                                          _selectedStatusFilter!,
-                                        ),
-                                      ),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                _selectedStatusFilter == null
-                                    ? l10n.createFirstComplaint
-                                    : l10n.tryDifferentFilter,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                            ],
-                          ),
+                      ? ComplaintsEmptyStateWidget(
+                          isFiltered: _selectedStatusFilter != null,
+                          selectedStatusText: _selectedStatusFilter != null
+                              ? ComplaintUtils.getStatusText(l10n, _selectedStatusFilter!)
+                              : null,
+                          onCreateComplaint: _showCreateComplaintDialog,
                         )
                       : RefreshIndicator(
                           onRefresh: () async {
@@ -240,12 +273,16 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
                           child: ListView.builder(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                             itemCount: filteredComplaints.length,
+                            // Performance optimization: add cache extent for better scrolling
+                            cacheExtent: 500,
                             itemBuilder: (context, index) {
+                              final complaint = filteredComplaints[index];
                               return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.only(bottom: 16),
                                 child: ComplaintCard(
-                                  complaint: filteredComplaints[index],
-                                  isAdmin: _isAdmin,
+                                  key: ValueKey(complaint.id),
+                                  complaint: complaint,
+                                  isAdmin: false,
                                   onStatusUpdate: (complaintId, status) {
                                     context
                                         .read<ComplaintCubit>()
@@ -265,125 +302,42 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
           }
 
           if (state is ComplaintError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.errorLoadingComplaints,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      context.read<ComplaintCubit>().loadComplaints();
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: Text(l10n.retry),
-                  ),
-                ],
-              ),
+            return ComplaintsErrorWidget(
+              error: state,
+              onRetry: () => context.read<ComplaintCubit>().loadComplaints(),
             );
           }
 
           return Center(child: Text(l10n.noComplaintsToDisplay));
         },
       ),
-      floatingActionButton: Builder(
-        builder: (context) {
-          final l10n = AppLocalizations.of(context)!;
-          return FloatingActionButton.extended(
-            onPressed: _showCreateComplaintDialog,
-            icon: const Icon(Icons.add),
-            label: Text(l10n.newComplaint),
-          );
-        },
-      ),
-    );
-  }
-
-  String _getStatusText(AppLocalizations l10n, int status) {
-    switch (status) {
-      case 0:
-        return l10n.statusNew;
-      case 1:
-        return l10n.statusInProgress;
-      case 2:
-        return l10n.statusDone;
-      case 3:
-        return l10n.statusRejected;
-      default:
-        return '';
-    }
-  }
-
-  Widget _buildFilterChip(
-    BuildContext context,
-    AppLocalizations l10n,
-    int? status,
-    String label,
-    IconData icon,
-    int count, [
-    Color? color,
-  ]) {
-    final theme = Theme.of(context);
-    final isSelected = _selectedStatusFilter == status;
-    final chipColor = color ?? theme.colorScheme.primary;
-
-    return FilterChip(
-      selected: isSelected,
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: isSelected ? chipColor : null),
-          const SizedBox(width: 6),
-          Text(label),
-          const SizedBox(width: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? chipColor.withValues(alpha: 0.2)
-                  : Colors.grey.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              count.toString(),
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? chipColor : Colors.grey[700],
+      floatingActionButton: ScaleTransition(
+        scale: _fabScaleAnimation,
+        child: Builder(
+          builder: (context) {
+            final l10n = AppLocalizations.of(context)!;
+            return FloatingActionButton.extended(
+              onPressed: _showCreateComplaintDialog,
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.add, size: 20),
               ),
-            ),
-          ),
-        ],
+              label: Text(l10n.newComplaint),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              elevation: 6,
+              highlightElevation: 12,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            );
+          },
+        ),
       ),
-      onSelected: (selected) {
-        setState(() {
-          _selectedStatusFilter = selected ? status : null;
-        });
-      },
-      selectedColor: chipColor.withValues(alpha: 0.15),
-      checkmarkColor: chipColor,
-      side: BorderSide(
-        color: isSelected
-            ? chipColor
-            : theme.colorScheme.outline.withValues(alpha: 0.3),
-        width: isSelected ? 2 : 1,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
   }
 }

@@ -18,10 +18,8 @@ class _CreateComplaintDialogState extends State<CreateComplaintDialog> {
   final _typeController = TextEditingController();
   final _descriptionController = TextEditingController();
   String? _selectedAgencyId;
-  late final Future<List<GovernmentAgencyEntity>> _agenciesFuture;
   List<PlatformFile> _selectedFiles = [];
 
-  // Predefined complaint types (will be localized in build method)
   List<String> _getComplaintTypes(AppLocalizations l10n) {
     return [
       l10n.complaintTypeInfrastructure,
@@ -44,16 +42,6 @@ class _CreateComplaintDialogState extends State<CreateComplaintDialog> {
   @override
   void initState() {
     super.initState();
-    _agenciesFuture = _loadAgencies();
-  }
-
-  Future<List<GovernmentAgencyEntity>> _loadAgencies() async {
-    final repo = context.read<ComplaintCubit>().repository;
-    final result = await repo.getGovernmentAgenciesPicklist();
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (agencies) => agencies,
-    );
   }
 
   Future<void> _pickAttachments() async {
@@ -86,7 +74,7 @@ class _CreateComplaintDialogState extends State<CreateComplaintDialog> {
     final l10n = AppLocalizations.of(context)!;
     final complaintTypes = _getComplaintTypes(l10n);
 
-    return BlocListener<ComplaintCubit, ComplaintState>(
+    return BlocConsumer<ComplaintCubit, ComplaintState>(
       listener: (context, state) {
         if (state is ComplaintCreated) {
           Navigator.of(context).pop(true);
@@ -96,183 +84,233 @@ class _CreateComplaintDialogState extends State<CreateComplaintDialog> {
           );
         }
       },
-      child: Dialog(
+      builder: (context, state) {
+        return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.createNewComplaint,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.createNewComplaint,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  FutureBuilder<List<GovernmentAgencyEntity>>(
-                    future: _agenciesFuture,
-                    builder: (context, snapshot) {
-                      final agencies =
-                          snapshot.data ?? const <GovernmentAgencyEntity>[];
-                      final isLoading =
-                          snapshot.connectionState == ConnectionState.waiting;
-                      final hasError = snapshot.hasError;
-                      return DropdownButtonFormField<String>(
-                        value: _selectedAgencyId,
-                        decoration: InputDecoration(
-                          labelText: '${l10n.agencyName} *',
-                          border: const OutlineInputBorder(),
-                          prefixIcon: const Icon(Icons.account_balance),
-                          helperText: hasError
-                              ? l10n.failedToLoadAgencies
-                              : null,
+                    const SizedBox(height: 20),
+                    FutureBuilder<List<GovernmentAgencyEntity>>(
+                      future: context.read<ComplaintCubit>().agencies.isEmpty
+                          ? null
+                          : Future.value(context.read<ComplaintCubit>().agencies),
+                      builder: (context, snapshot) {
+                        final agencies = snapshot.data ?? 
+                            context.read<ComplaintCubit>().agencies;
+                        final isLoading = agencies.isEmpty;
+                        final hasError = snapshot.hasError;
+                        return DropdownButtonFormField<String>(
+                          value: _selectedAgencyId,
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            labelText: '${l10n.agencyName} *',
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.account_balance),
+                            helperText: hasError
+                                ? l10n.failedToLoadAgencies
+                                : null,
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                          items: agencies
+                              .map(
+                                (a) => DropdownMenuItem<String>(
+                                  value: a.id,
+                                  child: Text(
+                                    a.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: isLoading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _selectedAgencyId = value;
+                                  });
+                                },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return l10n.agencyRequired;
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: _typeController.text.isEmpty
+                          ? null
+                          : _typeController.text,
+                      decoration: InputDecoration(
+                        labelText: '${l10n.complaintType} *',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.category),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
                         ),
-                        items: agencies
-                            .map(
-                              (a) => DropdownMenuItem(
-                                value: a.id,
-                                child: Text(a.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: isLoading
-                            ? null
-                            : (value) {
-                                setState(() {
-                                  _selectedAgencyId = value;
-                                });
-                              },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return l10n.agencyRequired;
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: _typeController.text.isEmpty
-                        ? null
-                        : _typeController.text,
-                    decoration: InputDecoration(
-                      labelText: '${l10n.complaintType} *',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.category),
+                      ),
+                      items: complaintTypes.map((type) {
+                        return DropdownMenuItem<String>(
+                          value: type,
+                          child: Text(
+                            type,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _typeController.text = value ?? '';
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return l10n.complaintTypeRequired;
+                        }
+                        return null;
+                      },
                     ),
-                    items: complaintTypes.map((type) {
-                      return DropdownMenuItem(value: type, child: Text(type));
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _typeController.text = value ?? '';
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.complaintTypeRequired;
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                      labelText: '${l10n.description} *',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.description),
-                      hintText: l10n.descriptionHint,
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: '${l10n.description} *',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.description),
+                        hintText: l10n.descriptionHint,
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                      ),
+                      maxLines: 3,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return l10n.descriptionRequired;
+                        }
+                        if (value.trim().length < 10) {
+                          return l10n.descriptionMinLength;
+                        }
+                        return null;
+                      },
                     ),
-                    maxLines: 4,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return l10n.descriptionRequired;
-                      }
-                      if (value.trim().length < 10) {
-                        return l10n.descriptionMinLength;
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  OutlinedButton.icon(
-                    onPressed: _pickAttachments,
-                    icon: const Icon(Icons.attach_file),
-                    label: Text(l10n.addAttachments),
-                  ),
-                  if (_selectedFiles.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    ..._selectedFiles.map(
-                      (f) => Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.insert_drive_file, size: 18),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                f.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close, size: 18),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedFiles.remove(f);
-                                });
-                              },
-                            ),
-                          ],
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: _pickAttachments,
+                      icon: const Icon(Icons.attach_file),
+                      label: Text(l10n.addAttachments),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
                         ),
                       ),
                     ),
+                    if (_selectedFiles.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      ..._selectedFiles.map(
+                        (f) => Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.insert_drive_file, size: 16),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  f.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close, size: 16),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedFiles.remove(f);
+                                  });
+                                },
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    BlocBuilder<ComplaintCubit, ComplaintState>(
+                      builder: (context, state) {
+                        final isLoading = state is ComplaintLoading;
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () => Navigator.of(context).pop(false),
+                              child: Text(l10n.cancel),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: isLoading ? null : _submitComplaint,
+                              child: isLoading
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text(l10n.submit),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
-                  const SizedBox(height: 24),
-                  BlocBuilder<ComplaintCubit, ComplaintState>(
-                    builder: (context, state) {
-                      final isLoading = state is ComplaintLoading;
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: isLoading
-                                ? null
-                                : () => Navigator.of(context).pop(false),
-                            child: Text(l10n.cancel),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: isLoading ? null : _submitComplaint,
-                            child: isLoading
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(l10n.submit),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+      );
+
+      },
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/complaint_entity.dart';
+import '../utils/complaint_utils.dart';
+import 'full_image_viewer.dart';
 
 class ComplaintDetailsBottomSheet extends StatelessWidget {
   final ComplaintEntity complaint;
@@ -16,43 +18,13 @@ class ComplaintDetailsBottomSheet extends StatelessWidget {
     this.onStatusUpdate,
   });
 
-  Color _getStatusColor(int status) {
-    switch (status) {
-      case 0:
-        return Colors.blue;
-      case 1:
-        return Colors.orange;
-      case 2:
-        return Colors.green;
-      case 3:
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  String _getStatusText(AppLocalizations l10n, int status) {
-    switch (status) {
-      case 0:
-        return l10n.statusNew;
-      case 1:
-        return l10n.statusInProgress;
-      case 2:
-        return l10n.statusDone;
-      case 3:
-        return l10n.statusRejected;
-      default:
-        return complaint.statusText;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('MMM dd, yyyy HH:mm');
-    final statusColor = _getStatusColor(complaint.status);
-    final statusText = _getStatusText(l10n, complaint.status);
+    final dateFormat = DateFormat('MMM dd, yyyy');
+    final statusColor = ComplaintUtils.getStatusColor(complaint.status);
+    final statusText = ComplaintUtils.getStatusText(l10n, complaint.status);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.9,
@@ -190,7 +162,7 @@ class ComplaintDetailsBottomSheet extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        _getStatusIcon(complaint.status),
+                        ComplaintUtils.getStatusIcon(complaint.status),
                         size: 18,
                         color: statusColor,
                       ),
@@ -305,68 +277,73 @@ class ComplaintDetailsBottomSheet extends StatelessWidget {
                               spacing: 10,
                               runSpacing: 10,
                               children: complaint.attachments.map((a) {
-                                return ClipRRect(
+                                return InkWell(
+                                  onTap: () => _showFullImage(context, a.url),
                                   borderRadius: BorderRadius.circular(12),
-                                  child: SizedBox(
-                                    width: 110,
-                                    height: 110,
-                                    child: Image.network(
-                                      a.url,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stack) {
-                                        return Container(
-                                          color: Colors.grey.withValues(
-                                            alpha: 0.15,
-                                          ),
-                                          child: Center(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Icon(
-                                                    Icons.broken_image_outlined,
-                                                  ),
-                                                  if (kDebugMode) ...[
-                                                    const SizedBox(height: 6),
-                                                    Text(
-                                                      a.url,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: const TextStyle(
-                                                        fontSize: 9,
-                                                      ),
-                                                      maxLines: 3,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: SizedBox(
+                                      width: 110,
+                                      height: 110,
+                                      child: Image.network(
+                                        a.url,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stack) {
+                                          return Container(
+                                            color: Colors.grey.withValues(
+                                              alpha: 0.15,
+                                            ),
+                                            child: Center(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.broken_image_outlined,
                                                     ),
+                                                    if (kDebugMode) ...[
+                                                      const SizedBox(height: 6),
+                                                      Text(
+                                                        a.url,
+                                                        textAlign:
+                                                        TextAlign.center,
+                                                        style: const TextStyle(
+                                                          fontSize: 9,
+                                                        ),
+                                                        maxLines: 3,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                      ),
+                                                    ],
                                                   ],
-                                                ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }
-                                            return Container(
-                                              color: Colors.grey.withValues(
-                                                alpha: 0.08,
+                                          );
+                                        },
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Container(
+                                            color: Colors.grey.withValues(
+                                              alpha: 0.08,
+                                            ),
+                                            child: const Center(
+                                              child:
+                                              CircularProgressIndicator(
+                                                strokeWidth: 2,
                                               ),
-                                              child: const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                    ),
-                                              ),
-                                            );
-                                          },
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 );
+
                               }).toList(),
                             ),
                           ],
@@ -383,30 +360,14 @@ class ComplaintDetailsBottomSheet extends StatelessWidget {
       },
     );
   }
-
-  IconData _getStatusIcon(int status) {
-    switch (status) {
-      case 0:
-        return Icons.new_releases;
-      case 1:
-        return Icons.hourglass_empty;
-      case 2:
-        return Icons.check_circle;
-      case 3:
-        return Icons.cancel;
-      default:
-        return Icons.help_outline;
-    }
-  }
-
   Widget _buildDetailSection(
-    BuildContext context,
-    AppLocalizations l10n,
-    IconData icon,
-    String label,
-    String value,
-    Color iconColor,
-  ) {
+      BuildContext context,
+      AppLocalizations l10n,
+      IconData icon,
+      String label,
+      String value,
+      Color iconColor,
+      ) {
     final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
@@ -447,6 +408,14 @@ class ComplaintDetailsBottomSheet extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showFullImage(BuildContext context, String imageUrl) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullImageViewer(imageUrl: imageUrl),
       ),
     );
   }

@@ -1,11 +1,33 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../domain/entities/complaint_entity.dart';
+import '../../../domain/entities/government_agency_entity.dart';
 import '../../../domain/repositories/complaint_repository.dart';
 import 'complaint_state.dart';
 
 class ComplaintCubit extends Cubit<ComplaintState> {
   final ComplaintRepository repository;
 
-  ComplaintCubit({required this.repository}) : super(ComplaintInitial());
+  // Performance optimization: cache computed values
+  Map<int, int> _statusCounts = {};
+  List<ComplaintEntity> _cachedComplaints = [];
+  List<GovernmentAgencyEntity> _agencies = [];
+
+  ComplaintCubit({required this.repository}) : super(ComplaintInitial()) {
+    _loadAgencies();
+  }
+
+  /// Load government agencies for complaint creation
+  Future<void> _loadAgencies() async {
+    emit(ComplaintLoadingAgencies());
+    final result = await repository.getGovernmentAgenciesPicklist();
+    result.fold(
+      (failure) => emit(ComplaintError(failure.message)),
+      (agencies) {
+        _agencies = agencies;
+        emit(ComplaintInitial()); // Reset to initial state
+      },
+    );
+  }
 
   /// Load all complaints (cache-first strategy)
   Future<void> loadComplaints({bool forceRefresh = false}) async {
@@ -33,10 +55,17 @@ class ComplaintCubit extends Cubit<ComplaintState> {
       // Otherwise show error state
       if (state is ComplaintLoaded && (state as ComplaintLoaded).isFromCache) {
         // Keep showing cached data, error is handled by network failure
-        return;
+        result.fold((failure) => emit(ComplaintError(failure.message)), (complaints) {
+          final statusCounts = calculateStatusCounts(complaints);
+          emit(ComplaintLoaded(complaints, isFromCache: false, statusCounts: statusCounts));
+        });
+      } else {
+        emit(ComplaintError(failure.message));
       }
-      emit(ComplaintError(failure.message));
-    }, (complaints) => emit(ComplaintLoaded(complaints, isFromCache: false)));
+    }, (complaints) {
+      final statusCounts = calculateStatusCounts(complaints);
+      emit(ComplaintLoaded(complaints, isFromCache: false, statusCounts: statusCounts));
+    });
   }
 
   /// Create a new complaint
@@ -73,4 +102,27 @@ class ComplaintCubit extends Cubit<ComplaintState> {
       loadComplaints();
     });
   }
+
+  // Performance optimization: memoized status counting
+  Map<int, int> calculateStatusCounts(List<ComplaintEntity> complaints) {
+    if (_cachedComplaints == complaints && _statusCounts.isNotEmpty) {
+      return _statusCounts;
+    }
+    
+    final counts = <int, int>{};
+    for (final complaint in complaints) {
+      counts[complaint.status] = (counts[complaint.status] ?? 0) + 1;
+    }
+    
+    _statusCounts = counts;
+    _cachedComplaints = complaints;
+    return counts;
+  }
+
+  void clearCache() {
+    _statusCounts.clear();
+    _cachedComplaints = [];
+  }
+
+  List<GovernmentAgencyEntity> get agencies => _agencies;
 }
