@@ -96,7 +96,7 @@ class ComplaintCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.complaintNumber(complaint.complaintNumber),
+                          l10n.complaintNumber(complaint.trackingNumber),
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             letterSpacing: -0.5,
@@ -113,7 +113,7 @@ class ComplaintCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            complaint.type,
+                            complaint.complaintType,
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.onPrimaryContainer,
                               fontWeight: FontWeight.w500,
@@ -180,16 +180,17 @@ class ComplaintCard extends StatelessWidget {
                 children: [
                   _buildInfoChip(
                     context,
-                    Icons.location_on,
-                    complaint.location,
-                    Colors.red,
-                  ),
-                  _buildInfoChip(
-                    context,
                     Icons.business,
-                    complaint.assignedPart,
+                    complaint.agencyName,
                     Colors.blue,
                   ),
+                  if (complaint.attachmentsCount > 0)
+                    _buildInfoChip(
+                      context,
+                      Icons.attachment,
+                      '${complaint.attachmentsCount}',
+                      Colors.green,
+                    ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -320,5 +321,3 @@ class ComplaintCard extends StatelessWidget {
     );
   }
 }
-
-

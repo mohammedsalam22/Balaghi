@@ -254,7 +254,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newComplaint => 'New Complaint';
 
   @override
-  String complaintCreatedSuccessfully(int number) {
+  String complaintCreatedSuccessfully(String number) {
     return 'Complaint #$number created successfully';
   }
 
@@ -303,9 +303,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
-  String complaintNumber(int number) {
+  String complaintNumber(String number) {
     return 'Complaint #$number';
   }
+
+  @override
+  String get agencyName => 'Agency';
+
+  @override
+  String get agencyRequired => 'Please select an agency';
+
+  @override
+  String get failedToLoadAgencies =>
+      'Failed to load agencies. Please try again.';
+
+  @override
+  String get addAttachments => 'Add attachments';
+
+  @override
+  String get attachments => 'Attachments';
 
   @override
   String get statusNew => 'New';

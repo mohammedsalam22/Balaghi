@@ -1,26 +1,50 @@
 import 'package:equatable/equatable.dart';
 
+class ComplaintAttachmentEntity extends Equatable {
+  final String id;
+  final String fileName;
+
+  /// Fully-qualified URL (resolved from backend relative path).
+  final String url;
+  final String contentType;
+  final DateTime uploadedAt;
+
+  const ComplaintAttachmentEntity({
+    required this.id,
+    required this.fileName,
+    required this.url,
+    required this.contentType,
+    required this.uploadedAt,
+  });
+
+  @override
+  List<Object> get props => [id, fileName, url, contentType, uploadedAt];
+}
+
 class ComplaintEntity extends Equatable {
   final String id;
-  final String type;
-  final String assignedPart;
-  final String location;
+  final String trackingNumber;
+  final String complaintType;
   final String description;
-  final int complaintNumber;
+  final String agencyName;
   final int status; // 0: New, 1: InProgress, 2: Done, 3: Rejected
-  final String userId;
+  /// Raw status string from backend (e.g. `Pending`, `UnderReview`).
+  final String statusRaw;
   final DateTime createdAt;
+  final int attachmentsCount;
+  final List<ComplaintAttachmentEntity> attachments;
 
   const ComplaintEntity({
     required this.id,
-    required this.type,
-    required this.assignedPart,
-    required this.location,
+    required this.trackingNumber,
+    required this.complaintType,
     required this.description,
-    required this.complaintNumber,
+    required this.agencyName,
     required this.status,
-    required this.userId,
+    required this.statusRaw,
     required this.createdAt,
+    required this.attachmentsCount,
+    required this.attachments,
   });
 
   String get statusText {
@@ -40,15 +64,15 @@ class ComplaintEntity extends Equatable {
 
   @override
   List<Object> get props => [
-        id,
-        type,
-        assignedPart,
-        location,
-        description,
-        complaintNumber,
-        status,
-        userId,
-        createdAt,
-      ];
+    id,
+    trackingNumber,
+    complaintType,
+    description,
+    agencyName,
+    status,
+    statusRaw,
+    createdAt,
+    attachmentsCount,
+    attachments,
+  ];
 }
-

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/di/injection_container.dart' as di;
 import 'core/routes/app_router.dart';
@@ -13,8 +16,23 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/complaints/presentation/cubit/complaints/complaint_cubit.dart';
 import 'l10n/app_localizations.dart';
 
+/// Allows loading images from a dev server with a self-signed HTTPS certificate.
+/// (Dio already allows this in `DioClient`, but `Image.network` uses HttpClient.)
+class _DevHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    final client = super.createHttpClient(context);
+    client.badCertificateCallback = (cert, host, port) => true;
+    return client;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (kDebugMode) {
+    HttpOverrides.global = _DevHttpOverrides();
+  }
 
   // Initialize dependency injection
   await di.init();

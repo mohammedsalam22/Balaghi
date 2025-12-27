@@ -66,7 +66,7 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
               SnackBar(
                 content: Text(
                   l10n.complaintCreatedSuccessfully(
-                    state.response.complaintNumber,
+                    state.response.trackingNumber,
                   ),
                 ),
                 backgroundColor: Colors.green,

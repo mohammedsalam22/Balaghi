@@ -582,7 +582,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Complaint #{number} created successfully'**
-  String complaintCreatedSuccessfully(int number);
+  String complaintCreatedSuccessfully(String number);
 
   /// No description provided for @createNewComplaint.
   ///
@@ -672,7 +672,37 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Complaint #{number}'**
-  String complaintNumber(int number);
+  String complaintNumber(String number);
+
+  /// No description provided for @agencyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Agency'**
+  String get agencyName;
+
+  /// No description provided for @agencyRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an agency'**
+  String get agencyRequired;
+
+  /// No description provided for @failedToLoadAgencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load agencies. Please try again.'**
+  String get failedToLoadAgencies;
+
+  /// No description provided for @addAttachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Add attachments'**
+  String get addAttachments;
+
+  /// No description provided for @attachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get attachments;
 
   /// No description provided for @statusNew.
   ///

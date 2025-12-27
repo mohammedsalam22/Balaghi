@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/network/network_exceptions.dart';
 import '../../domain/entities/complaint_entity.dart';
+import '../../domain/entities/government_agency_entity.dart';
 import '../../domain/repositories/complaint_repository.dart';
 import '../datasources/complaint_local_datasource.dart';
 import '../datasources/complaint_remote_datasource.dart';
@@ -22,10 +23,10 @@ class ComplaintRepositoryImpl implements ComplaintRepository {
   ) async {
     try {
       final requestModel = CreateComplaintRequestModel(
-        type: request.type,
-        assignedPart: request.assignedPart,
-        location: request.location,
+        agencyId: request.agencyId,
+        complaintType: request.complaintType,
         description: request.description,
+        attachmentPaths: request.attachmentPaths,
       );
       final response = await remoteDataSource.createComplaint(requestModel);
       // Invalidate cache after creating new complaint
@@ -33,11 +34,24 @@ class ComplaintRepositoryImpl implements ComplaintRepository {
       return Right(
         CreateComplaintResponse(
           message: response.message,
-          complaintNumber: response.complaintNumber,
-          complaintId: response.complaintId,
           success: response.success,
+          trackingNumber: response.trackingNumber,
+          submittedAt: response.submittedAt,
         ),
       );
+    } on NetworkException catch (e) {
+      return Left(_mapNetworkExceptionToFailure(e));
+    } catch (e) {
+      return Left(UnknownFailure('Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GovernmentAgencyEntity>>>
+  getGovernmentAgenciesPicklist() async {
+    try {
+      final agencies = await remoteDataSource.getGovernmentAgenciesPicklist();
+      return Right(agencies);
     } on NetworkException catch (e) {
       return Left(_mapNetworkExceptionToFailure(e));
     } catch (e) {

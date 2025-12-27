@@ -28,57 +28,49 @@ class ComplaintCubit extends Cubit<ComplaintState> {
     // Then fetch fresh data from server
     emit(ComplaintLoading());
     final result = await repository.getComplaints();
-    result.fold(
-      (failure) {
-        // If we have cached data, show it with error message
-        // Otherwise show error state
-        if (state is ComplaintLoaded && (state as ComplaintLoaded).isFromCache) {
-          // Keep showing cached data, error is handled by network failure
-          return;
-        }
-        emit(ComplaintError(failure.message));
-      },
-      (complaints) => emit(ComplaintLoaded(complaints, isFromCache: false)),
-    );
+    result.fold((failure) {
+      // If we have cached data, show it with error message
+      // Otherwise show error state
+      if (state is ComplaintLoaded && (state as ComplaintLoaded).isFromCache) {
+        // Keep showing cached data, error is handled by network failure
+        return;
+      }
+      emit(ComplaintError(failure.message));
+    }, (complaints) => emit(ComplaintLoaded(complaints, isFromCache: false)));
   }
 
   /// Create a new complaint
   Future<void> createComplaint({
-    required String type,
-    required String assignedPart,
-    required String location,
+    required String agencyId,
+    required String complaintType,
     required String description,
+    List<String> attachmentPaths = const [],
   }) async {
     emit(ComplaintLoading());
     final request = CreateComplaintRequest(
-      type: type,
-      assignedPart: assignedPart,
-      location: location,
+      agencyId: agencyId,
+      complaintType: complaintType,
       description: description,
+      attachmentPaths: attachmentPaths,
     );
     final result = await repository.createComplaint(request);
-    result.fold(
-      (failure) => emit(ComplaintError(failure.message)),
-      (response) {
-        emit(ComplaintCreated(response));
-        // Reload complaints after creating
-        loadComplaints();
-      },
-    );
+    result.fold((failure) => emit(ComplaintError(failure.message)), (response) {
+      emit(ComplaintCreated(response));
+      // Reload complaints after creating
+      loadComplaints();
+    });
   }
 
   /// Update complaint status (admin only)
   Future<void> updateComplaintStatus(String complaintId, int status) async {
     emit(ComplaintLoading());
     final result = await repository.updateComplaintStatus(complaintId, status);
-    result.fold(
-      (failure) => emit(ComplaintError(failure.message)),
-      (_) {
-        emit(const ComplaintStatusUpdated('Complaint status updated successfully'));
-        // Reload complaints after updating
-        loadComplaints();
-      },
-    );
+    result.fold((failure) => emit(ComplaintError(failure.message)), (_) {
+      emit(
+        const ComplaintStatusUpdated('Complaint status updated successfully'),
+      );
+      // Reload complaints after updating
+      loadComplaints();
+    });
   }
 }
-

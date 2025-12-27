@@ -109,7 +109,7 @@
   "@complaintCreatedSuccessfully": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -131,10 +131,15 @@
   "@complaintNumber": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
+  "agencyName": "Agency",
+  "agencyRequired": "Please select an agency",
+  "failedToLoadAgencies": "Failed to load agencies. Please try again.",
+  "addAttachments": "Add attachments",
+  "attachments": "Attachments",
   "statusNew": "New",
   "statusInProgress": "In Progress",
   "statusDone": "Done",

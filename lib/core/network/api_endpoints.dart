@@ -1,13 +1,13 @@
 import 'dart:io';
 
 class ApiEndpoints {
-
   static String get baseUrl {
     if (Platform.isAndroid) {
-//change this to your ipV4
-      return 'https://10.161.102.81:5001';
+      //change this to your ipV4
+      return 'https://10.218.59.81:5001';
     } else {
-      return 'http://localhost:5001';
+      // Backend serves files (uploads) via HTTPS as well.
+      return 'https://localhost:5001';
     }
   }
 
@@ -22,9 +22,37 @@ class ApiEndpoints {
 
   // Complaints endpoints
   static const String complaints = '/api/complaints';
-  static String complaintStatus(String complaintId) => '/api/complaints/$complaintId/status';
+  static String complaintStatus(String complaintId) =>
+      '/api/complaints/$complaintId/status';
 
+  /// Fetch complaints for the current user (new backend endpoint).
+  static const String getComplaintsByUser =
+      '/api/complaints/GetComplaintsByUser';
 
+  /// Submit a complaint (Citizen/User) - multipart/form-data.
+  static const String submitComplaint = '/api/complaints/submit';
+
+  /// Government agency picklist (for selecting `agencyId`).
+  static const String governmentAgenciesPicklist =
+      '/api/GovernmentAgency/picklist';
+
+  /// Resolve a relative backend file path (e.g. `/uploads/...`) to a full URL.
+  static String resolveUrl(String? url) {
+    if (url == null || url.isEmpty) return '';
+    final trimmed = url.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    // Backend returns URLs like "/uploads/...".
+    // Build it as: API_BASE + url  (example: https://localhost:5001 + /uploads/x.png)
+    final base = baseUrl.endsWith('/')
+        ? baseUrl.substring(0, baseUrl.length - 1)
+        : baseUrl;
+    if (trimmed.startsWith('/')) {
+      return '$base$trimmed';
+    }
+    return '$base/$trimmed';
+  }
 
   // Helper method to replace path parameters
   static String replacePathParams(String path, Map<String, String> params) {

@@ -109,7 +109,7 @@
   "@complaintCreatedSuccessfully": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -131,10 +131,15 @@
   "@complaintNumber": {
     "placeholders": {
       "number": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
+  "agencyName": "الجهة",
+  "agencyRequired": "يرجى اختيار الجهة",
+  "failedToLoadAgencies": "تعذر تحميل الجهات. حاول مرة أخرى.",
+  "addAttachments": "إضافة مرفقات",
+  "attachments": "المرفقات",
   "statusNew": "جديدة",
   "statusInProgress": "قيد المعالجة",
   "statusDone": "مكتملة",

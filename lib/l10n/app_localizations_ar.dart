@@ -254,7 +254,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newComplaint => 'شكوى جديدة';
 
   @override
-  String complaintCreatedSuccessfully(int number) {
+  String complaintCreatedSuccessfully(String number) {
     return 'تم إنشاء الشكوى رقم $number بنجاح';
   }
 
@@ -301,9 +301,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get submit => 'إرسال';
 
   @override
-  String complaintNumber(int number) {
+  String complaintNumber(String number) {
     return 'الشكوى رقم $number';
   }
+
+  @override
+  String get agencyName => 'الجهة';
+
+  @override
+  String get agencyRequired => 'يرجى اختيار الجهة';
+
+  @override
+  String get failedToLoadAgencies => 'تعذر تحميل الجهات. حاول مرة أخرى.';
+
+  @override
+  String get addAttachments => 'إضافة مرفقات';
+
+  @override
+  String get attachments => 'المرفقات';
 
   @override
   String get statusNew => 'جديدة';
